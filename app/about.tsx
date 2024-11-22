@@ -19,36 +19,26 @@ interface FoodItem {
 const About = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [cart, setCart] = useState<FoodItem[]>([]);
-
-  // Breakfast items data
-  const breakfastItems: FoodItem[] = [
+  const [allItems, setAllItems] = useState<FoodItem[]>([
+    // Breakfast items
     { name: 'Pancakes', price: 140, category: 'Breakfast' },
     { name: 'Omelette', price: 200, category: 'Breakfast' },
     { name: 'French Toast', price: 90, category: 'Breakfast' },
     { name: 'Breakfast Burrito', price: 180, category: 'Breakfast' },
     { name: 'Avocado Toast', price: 80, category: 'Breakfast' },
-  ];
-
-  // Lunch items data
-  const lunchItems: FoodItem[] = [
+    // Lunch items
     { name: 'Grilled Chicken Sandwich', price: 250, category: 'Lunch' },
     { name: 'Caesar Salad', price: 160, category: 'Lunch' },
     { name: 'Cheeseburger', price: 240, category: 'Lunch' },
     { name: 'Tuna Wrap', price: 190, category: 'Lunch' },
     { name: 'Veggie Pizza', price: 200, category: 'Lunch' },
-  ];
-
-  // Dinner items data
-  const dinnerItems: FoodItem[] = [
+    // Dinner items
     { name: 'Steak and Potatoes', price: 300, category: 'Dinner' },
     { name: 'Salmon Fillet', price: 260, category: 'Dinner' },
     { name: 'Chicken Alfredo', price: 240, category: 'Dinner' },
     { name: 'Lamb Chops', price: 285, category: 'Dinner' },
     { name: 'Seafood Paella', price: 300, category: 'Dinner' },
-  ];
-
-  // Combine all items into a single list
-  const allItems: FoodItem[] = [...breakfastItems, ...lunchItems, ...dinnerItems];
+  ]);
 
   // Filter items based on the search term
   const filteredItems = allItems.filter(
@@ -69,6 +59,16 @@ const About = () => {
     setCart(updatedCart);
   };
 
+  // Update item price
+  const updatePrice = (index: number, newPrice: string) => {
+    const updatedItems = [...allItems];
+    const priceValue = parseFloat(newPrice);
+    if (!isNaN(priceValue)) {
+      updatedItems[index].price = priceValue;
+      setAllItems(updatedItems);
+    }
+  };
+
   // Calculate total price
   const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
 
@@ -87,21 +87,27 @@ const About = () => {
         {/* Items List */}
         {filteredItems.length > 0 ? (
           <FlatList
-            data={filteredItems}
-            keyExtractor={(item, index) => `${item.name}-${index}`}
-            renderItem={({ item }) => (
-              <View style={styles.itemContainer}>
-                <Text style={styles.itemName}>{item.name}</Text>
-                <Text style={styles.itemPrice}>R{item.price}</Text>
-                <TouchableOpacity
-                  style={styles.addButton}
-                  onPress={() => addToCart(item)}
-                >
-                  <Text style={styles.addButtonText}>Add</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          />
+          data={filteredItems}
+          keyExtractor={(item, index) => `${item.name}-${index}`}
+          renderItem={({ item, index }) => (
+            <View style={styles.itemContainer}>
+              <Text style={styles.itemName}>{item.name}</Text>
+              <TextInput
+                style={styles.itemPriceInput} // Corrected from styles.itemPrice
+                keyboardType="numeric"
+                value={item.price.toString()}
+                onChangeText={(text) => updatePrice(index, text)}
+              />
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => addToCart(item)}
+              >
+                <Text style={styles.addButtonText}>Add</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+        
         ) : (
           <Text style={styles.noItemsText}>
             No items found. Please try a different search term.
@@ -165,10 +171,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  itemPriceInput: {
+    fontSize: 14,
+    color: '#333',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    width: 80,
+    textAlign: 'right',
+  },
   itemPrice: {
     fontSize: 14,
     color: '#888',
   },
+  
   addButton: {
     backgroundColor: '#4caf50',
     padding: 10,
