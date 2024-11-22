@@ -1,114 +1,123 @@
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, ImageBackground, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  ImageBackground,
+  ScrollView,
+} from 'react-native';
 
 const Home = () => {
-   // Breakfast items data
-   const breakfastItems = [
-    { name: 'Pancakes', price: 'R140' },
-    { name: 'Omelette', price: 'R200' },
-    { name: 'French Toast', price: 'R90' },
-    { name: 'Breakfast Burrito', price: 'R180' },
-    { name: 'Avocado Toast', price: 'R80' },
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Breakfast items data
+  const breakfastItems = [
+    { name: 'Pancakes', price: 'R140', category: 'Breakfast' },
+    { name: 'Omelette', price: 'R200', category: 'Breakfast' },
+    { name: 'French Toast', price: 'R90', category: 'Breakfast' },
+    { name: 'Breakfast Burrito', price: 'R180', category: 'Breakfast' },
+    { name: 'Avocado Toast', price: 'R80', category: 'Breakfast' },
   ];
 
- // Lunch items data
- const lunchItems = [
-  { name: 'Grilled Chicken Sandwich', price: 'R250' },
-  { name: 'Caesar Salad', price: 'R160' },
-  { name: 'Cheeseburger', price: 'R240' },
-  { name: 'Tuna Wrap', price: 'R190' },
-  { name: 'Veggie Pizza', price: 'R2oo' },
-];
+  // Lunch items data
+  const lunchItems = [
+    { name: 'Grilled Chicken Sandwich', price: 'R250', category: 'Lunch' },
+    { name: 'Caesar Salad', price: 'R160', category: 'Lunch' },
+    { name: 'Cheeseburger', price: 'R240', category: 'Lunch' },
+    { name: 'Tuna Wrap', price: 'R190', category: 'Lunch' },
+    { name: 'Veggie Pizza', price: 'R200', category: 'Lunch' },
+  ];
 
-// Dinner items data
-const dinnerItems = [
-  { name: 'Steak and Potatoes', price: 'R300' },
-  { name: 'Salmon Fillet', price: 'R260' },
-  { name: 'Chicken Alfredo', price: 'R240' },
-  { name: 'Lamb Chops', price: 'R285' },
-  { name: 'Seafood Paella', price: 'R300' },
-];
+  // Dinner items data
+  const dinnerItems = [
+    { name: 'Steak and Potatoes', price: 'R300', category: 'Dinner' },
+    { name: 'Salmon Fillet', price: 'R260', category: 'Dinner' },
+    { name: 'Chicken Alfredo', price: 'R240', category: 'Dinner' },
+    { name: 'Lamb Chops', price: 'R285', category: 'Dinner' },
+    { name: 'Seafood Paella', price: 'R300', category: 'Dinner' },
+  ];
+
+  // Combine all items into a single list
+  const allItems = [...breakfastItems, ...lunchItems, ...dinnerItems];
+
+  // Filter items based on the search term
+  const filteredItems = allItems.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <ScrollView>
-    <View style={styles.container}>
-      {/* Logo */}
-      <Image source={require('../assets/logo.png')} style={styles.logo} />
+      <View style={styles.container}>
+        {/* Logo */}
+        <ImageBackground
+          source={require('../assets/logo.png')}
+          style={styles.logo}
+        />
 
-      {/* Search Bar */}
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search..."
-        placeholderTextColor="#999"
-      />
+        {/* Search Bar */}
+        <TextInput
+          style={styles.searchBar}
+          placeholder="Search by item or category..."
+          placeholderTextColor="#999"
+          value={searchTerm}
+          onChangeText={setSearchTerm}
+        />
 
-      {/* Panels */}
-      <View style={styles.panelContainer}>
-        {/* Panel 1 */}
-        <TouchableOpacity style={styles.panel}>
-          <ImageBackground
-            source={require('../assets/panel1.png')} // Replace with actual image path
-            style={styles.backgroundImage}
-            imageStyle={styles.imageStyle}
-          >
-            <Text style={styles.panelText}>Breakfast</Text>
-          </ImageBackground>
+        {/* Panels */}
+        <View style={styles.panelContainer}>
+          {/* Breakfast Panel */}
+          <TouchableOpacity style={styles.panel}>
+            <ImageBackground
+              source={require('../assets/panel1.png')}
+              style={styles.backgroundImage}
+              imageStyle={styles.imageStyle}
+            >
+              <Text style={styles.panelText}>Breakfast</Text>
+            </ImageBackground>
           </TouchableOpacity>
 
-          {/* Breakfast Items */}
-          <View style={styles.breakfastContainer}>
-              {breakfastItems.map((item, index) => (
-                <View key={index} style={styles.breakfastItem}>
-                  <Text style={styles.itemName}>{item.name}</Text>
-                  <Text style={styles.itemPrice}>{item.price}</Text>
-                </View>
-              ))}
-            </View>
-        
-        {/* Panel 2 */}
-        <TouchableOpacity style={styles.panel}>
-          <ImageBackground
-            source={require('../assets/panel2.png')} // Replace with actual image path
-            style={styles.backgroundImage}
-            imageStyle={styles.imageStyle}
-          >
-            <Text style={styles.panelText}>Lunch</Text>
-          </ImageBackground>
-        </TouchableOpacity>
+          {/* Lunch Panel */}
+          <TouchableOpacity style={styles.panel}>
+            <ImageBackground
+              source={require('../assets/panel2.png')}
+              style={styles.backgroundImage}
+              imageStyle={styles.imageStyle}
+            >
+              <Text style={styles.panelText}>Lunch</Text>
+            </ImageBackground>
+          </TouchableOpacity>
 
-        {/* Lunch Items Under Panel 2 */}
-        <View style={styles.lunchContainer}>
-            {lunchItems.map((item, index) => (
-              <View key={index} style={styles.menuItem}>
-                <Text style={styles.lunchName}>{item.name}</Text>
-                <Text style={styles.lunchPrice}>{item.price}</Text>
-              </View>
-            ))}
-          </View>
+          {/* Dinner Panel */}
+          <TouchableOpacity style={styles.panel}>
+            <ImageBackground
+              source={require('../assets/panel3.png')}
+              style={styles.backgroundImage}
+              imageStyle={styles.imageStyle}
+            >
+              <Text style={styles.panelText}>Dinner</Text>
+            </ImageBackground>
+          </TouchableOpacity>
+        </View>
 
-
-        {/* Panel 3 */}
-        <TouchableOpacity style={styles.panel}>
-          <ImageBackground
-            source={require('../assets/panel3.png')} // Replace with actual image path
-            style={styles.backgroundImage}
-            imageStyle={styles.imageStyle}
-          >
-            <Text style={styles.panelText}>Panel 3</Text>
-          </ImageBackground>
-        </TouchableOpacity>
-
-          {/* Dinner Items Under Panel 3 */}
-          <View style={styles.menuContainer}>
-            {dinnerItems.map((item, index) => (
-              <View key={index} style={styles.menuItem}>
+        {/* Display Filtered Items */}
+        <View>
+          {filteredItems.length > 0 ? (
+            filteredItems.map((item, index) => (
+              <View key={index} style={styles.itemContainer}>
                 <Text style={styles.itemName}>{item.name}</Text>
                 <Text style={styles.itemPrice}>{item.price}</Text>
+                <Text style={styles.itemCategory}>{item.category}</Text>
               </View>
-            ))}
-          </View>
+            ))
+          ) : (
+            <Text style={styles.noResultsText}>No items found. Please try a different search term.</Text>
+          )}
+        </View>
       </View>
-    </View>
     </ScrollView>
   );
 };
@@ -123,7 +132,6 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   logo: {
-    width: 150,  // Adjust size based on your logo
     height: 150,
     resizeMode: 'contain',
     alignSelf: 'center',
@@ -143,7 +151,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   panel: {
-    height: 150,  // Adjust the height based on your design
+    height: 150,
     borderRadius: 15,
     overflow: 'hidden',
     marginBottom: 20,
@@ -153,7 +161,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   imageStyle: {
-    borderRadius: 15,  // Ensures the image is also rounded
+    borderRadius: 15,
   },
   panelText: {
     color: '#fff',
@@ -161,58 +169,31 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     margin: 10,
   },
-  breakfastContainer: {
+  itemContainer: {
     padding: 10,
     backgroundColor: '#fff',
-    borderRadius: 15,
-    marginTop: 10,
-  },
-  breakfastItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
+    borderRadius: 10,
+    marginVertical: 5,
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 10,
-    marginBottom: 10,
   },
   itemName: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: 'bold',
   },
   itemPrice: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 14,
     color: '#888',
   },
-  lunchContainer: {
-    padding: 10,
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    marginTop: 10,
+  itemCategory: {
+    fontSize: 12,
+    color: '#aaa',
+    fontStyle: 'italic',
   },
-  menuItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  lunchName: {
+  noResultsText: {
+    textAlign: 'center',
+    color: '#999',
+    marginTop: 20,
     fontSize: 16,
-    fontWeight: '500',
-  },
-  lunchPrice: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#888',
-  },
-  menuContainer: {
-    padding: 10,
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    marginTop: 10,
   },
 });
